@@ -1,0 +1,27 @@
+{
+  "name": "remember-point",
+  "version": "1.0.0",
+  "description": "This is a remember point to work",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/claudiohenriquefds/remember-point.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/claudiohenriquefds/remember-point/issues"
+  },
+  "homepage": "https://github.com/claudiohenriquefds/remember-point#readme",
+  "devDependencies": {
+    "electron": "^21.2.3"
+  },
+  "dependencies": {
+    "puppeteer-core": "^19.2.2",
+    "puppeteer-in-electron": "^3.0.5"
+  }
+}
