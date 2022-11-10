@@ -1,10 +1,10 @@
-.hit-point-button{
-    padding: 10px;
-    background-color: red;
+.hit-point-button {
+  padding: 10px;
+  background-color: red;
 }
 
-.hit-point-box{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.hit-point-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
