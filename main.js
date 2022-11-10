@@ -1,40 +1,64 @@
-const { app, BrowserWindow } = require('electron')
-const pie = require("puppeteer-in-electron")
-const puppeteer = require("puppeteer-core");
+const { app, Tray, Menu, BrowserWindow } = require('electron');
+const puppeteer = require('puppeteer-core');
 
-const createWindow = () => {
-    const win = new BrowserWindow({
-        width: 400,
-        height: 400,
-        center: true,
-        alwaysOnTop: true,
-        title: "Remember Point",
-        autoHideMenuBar: true,
-        // webPreferences: {
-        //     devTools: false
-        // }
-    })
+const startApplication = () => {
+	const win = new BrowserWindow({
+		width: 400,
+		height: 400,
+		center: true,
+		alwaysOnTop: true,
+		title: 'Remember Point',
+		autoHideMenuBar: true,
+		icon: './assets/logo.png',
+		// webPreferences: {
+		//     devTools: false,
+		// }
+	});
 
-    win.loadFile('./src/screens/point/index.html')
+	win.loadFile('./src/screens/point/index.html');
 
-    win.querySelector('.hit-point-button').addEventListener('click', () => {
-        hitPoint()
-    })
-}
+	win.on('close', function (event) {
+		if (!app.isQuiting) {
+			event.preventDefault();
+			win.hide();
+		}
 
-app.whenReady().then(() => {
-    createWindow()
-})
+		return false;
+	});
+
+	let tray = new Tray('./assets/logo.png');
+
+	const contextMenu = Menu.buildFromTemplate([
+		{ label: 'Configurações', type: 'normal', click: () => win.show() },
+		{ label: 'Bater ponto', type: 'normal', click: () => hitPoint() },
+		{
+			label: 'Sair',
+			type: 'normal',
+			click: () => {
+				app.isQuiting = true;
+				app.quit();
+			},
+		},
+	]);
+
+	tray.setContextMenu(contextMenu);
+	tray.setToolTip('Remember Point');
+	tray.setTitle('Remember Point');
+};
 
 const hitPoint = async () => {
-    await pie.initialize(app);
-    const browser = await pie.connect(app, puppeteer);
+	const browser = await puppeteer.launch({
+		headless: false,
+		executablePath: '/usr/bin/google-chrome',
+	});
+	const page = await browser.newPage();
 
-    const window = new BrowserWindow();
-    const url = "https://app2.pontomais.com.br/login";
-    await window.loadURL(url);
+	await page.goto('https://app2.pontomais.com.br/login');
+	page.click('.pm-button .pm-primary');
 
-    const page = await pie.getPage(browser, window);
-    console.log(page.url());
-    window.destroy();
+	// await browser.close();
 };
+
+app.whenReady().then(() => {
+	startApplication();
+});
